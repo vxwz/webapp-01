@@ -1,0 +1,5 @@
+.mypy_cache/
+dist/
+__pycache__/
+.venv/
+.pytest_cache/
