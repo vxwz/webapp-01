@@ -48,6 +48,6 @@ jobs:
 
             - name: Run tests
               run: |
-                  source .venv/bin/activate
+                  source ../.venv/bin/activate
                   pytests tests/
                   coverage report
