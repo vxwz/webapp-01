@@ -1,6 +1,6 @@
 name: build-python-backend
 
-on: [push]
+on: [push]  
 
 jobs:
     test:
@@ -31,14 +31,13 @@ jobs:
               with:
                   version: 1.1.4
                   virtualenvs-create: true
-                  virtualenvs-in-project: false
-                  virtualenvs-path: ~/.virtualenvs
+                  virtualenvs-in-project: true
 
             - name: Load cached virtual environments
               uses: actions/cache@v2
               id: cached-poetry-dependencies
               with:
-                  path: ~/.virtualenvs
+                  path: .venv
                   key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
 
             - name: Install dependencies (if not cached)
@@ -50,5 +49,17 @@ jobs:
             - name: Run tests
               run: |
                   cd backend
-                  poetry run pytest --cov . -n 2
-                  coverage report
+                  poetry run pytest --cov .coverage -cov-report=xml -n 2
+
+            - name: Add Coverage Label
+              uses: actions/github-script@v2
+              with: |
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  script: |
+                      github.issues.setLabels({
+                          issue_number: context.issue.number,
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          labels: ['COV: ${{ steps.coverage--percent.outputs.coverage }}']
+                          })
+
