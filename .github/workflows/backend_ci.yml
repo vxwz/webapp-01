@@ -52,7 +52,7 @@ jobs:
                   poetry run pytest --cov .coverage -cov-report=xml -n 2
 
             - name: Add Coverage Label
-              uses: actions/github-script@v2
+              uses: actions/github-script@v3
               with: |
                   github-token: ${{secrets.GITHUB_TOKEN}}
                   script: |
