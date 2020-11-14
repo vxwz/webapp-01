@@ -1,0 +1,49 @@
+name: build-python-backend
+
+on: [push]
+
+jobs:
+    runs-on: ubuntu-latest
+    steps:
+        
+        - name: Checkout at latest commit point
+          uses: actions/checkout@v2
+        
+        - name: Setup Python 3.9
+          user: actions/setup-python@v2
+          with:
+              python-version: '3.9'
+              architecture: 'x64'
+        
+        - name: Display Python version
+          run: python -c "import sys; print(sys.version)"
+
+        - name: Load pip cache if a cache exists
+          with:
+              path: ~/.cache/pip
+              key: ${{ runner.os}}-pip
+              restore-keys: ${{ runner.os }}-pip
+        
+        - name: Install Poetry
+          uses: snok/install-poetry@v1.1.1
+          with:
+              version: 1.1.4
+              virtualenvs-create: true
+              virtualenv-in-project: true
+
+        - name: Load cached virtual environments
+          id: cached-poetry-dependencies
+          uses: actions/cache@v2
+          with:
+              path: .venv
+              key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
+        - name: Install dependencies (if not cached)
+          run: poetry install
+          if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+
+        - name: Run tests
+          run: |
+              source .venv/bin/activate
+              pytests tests/
+              coverage report
