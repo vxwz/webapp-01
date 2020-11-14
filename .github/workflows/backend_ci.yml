@@ -49,5 +49,6 @@ jobs:
 
             - name: Run tests
               run: |
+                  cd backend
                   poetry run pytest --cov . -n 2
                   coverage report
