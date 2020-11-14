@@ -31,7 +31,7 @@ jobs:
               with:
                   version: 1.1.4
                   virtualenvs-create: true
-                  virtualenv-in-project: true
+                  virtualenvs-in-project: true
 
             - name: Load cached virtual environments
               uses: actions/cache@v2
