@@ -51,15 +51,3 @@ jobs:
                   cd backend
                   poetry run pytest --cov .coverage -cov-report=xml -n 2
 
-            - name: Add Coverage Label
-              uses: actions/github-script@v3
-              with:
-                  github-token: ${{secrets.GITHUB_TOKEN}}
-                  script: |
-                      github.issues.setLabels({
-                          issue_number: context.issue.number,
-                          owner: context.repo.owner,
-                          repo: context.repo.repo,
-                          labels: ['COV: ${{ steps.coverage--percent.outputs.coverage }}']
-                          })
-
